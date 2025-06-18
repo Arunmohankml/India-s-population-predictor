@@ -1,14 +1,21 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-data=pd.read_csv("population.csv")
-
-latest_year=data["Year"].max()
-latest_data=data[data["Year"]==latest_year]
-
-new=latest_data.sort_values(by="Value", ascending=False).head(10)
-print(new["Country Name"])
-plt.bar(new["Country Code"], new["Value"])
-plt.title("2023 population data")
-plt.xlabel("countries")
-plt.ylabel("population")
-plt.savefig("population.png")
+import pandas as pd  
+import numpy as np  
+from sklearn.linear_model import LinearRegression  
+  
+data = pd.read_csv("population.csv")  
+x=data["year"].values.reshape(-1,1)  
+y=data["population"].values  
+model= LinearRegression()  
+model.fit(x,y)  
+  
+maxyear=2100  
+while True:  
+	year=int(input("Enter the year: "))  
+	if year == 0:  
+		print("Enter a valid year")  
+	else:  
+		if(year <= maxyear):  
+			predicted=model.predict([[year]])  
+			print(f"Predicted population in the year {year} is: {int(predicted[0])}")  
+		else:  
+			print(f"The year {year} is out of training range , you can predict upto year {maxyear}")  
